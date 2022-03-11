@@ -1,0 +1,18 @@
+{
+    "files.associations": {
+        "iostream": "cpp"
+    },   "terminal.integrated.profiles.windows":{
+    "Anaconda Prompt": {
+                "source": "PowerShell",
+                "args": [
+                    "powershell",
+                    "-NoExit",
+                    "-ExecutionPolicy ByPass",
+                    "-Command",
+                    "'C:\\Users\\320043459\\AppData\\Local\\Continuum\\anaconda3\\shell\\condabin\\conda-hook.ps1' ; conda activate 'C:\\Users\\320043459\\AppData\\Local\\Continuum\\anaconda3\\' "
+                ],
+                "icon": "smiley",
+          },
+    },
+    "terminal.integrated.defaultProfile.windows": "Anaconda Prompt",
+}
