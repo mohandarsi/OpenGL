@@ -1,8 +1,9 @@
 # OpenGl C++ application
+Orthographic projection to configure top-left corner as orizon(0, 0).  
+and size as windows size. This makes developer to use coordinates in integers ove flosting point numbers.
 
-Based on GLFW and GLM.  
-Uses GLAD as a supporting library.
-
+Check tutorial on [VAO,VBO](https://www.youtube.com/watch?v=hrZbyd4qPnk)  
+ and [Projection](https://www.youtube.com/watch?v=YfaSzg6XG6A) another way to make NDC coordinates to visible by translating.  
 ## SetUp
 
 - Install [VS Code](https://code.visualstudio.com/)

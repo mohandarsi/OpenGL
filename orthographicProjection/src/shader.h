@@ -1,5 +1,4 @@
-#ifndef SHADER_H
-#define SHADER_H
+#pragma once
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -171,4 +170,3 @@ private:
     int *locs = nullptr;       // Shader locations array (MAX_SHADER_LOCATIONS)
 
 };
-#endif
