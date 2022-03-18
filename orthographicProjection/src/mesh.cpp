@@ -27,7 +27,7 @@ Mesh::~Mesh()
 	glDeleteBuffers(1, &m_vboVerts);
 }
 
-void Mesh::SetVertices(std::vector<glm::vec3>& verts)
+void Mesh::SetVertices(const std::vector<glm::vec3>& verts)
 {
 	this->m_vertices = verts;
 

@@ -6,6 +6,7 @@
 
 #include "shader.h"
 #include "mesh.h"
+#include "camera2d.h"
 
 #include <iostream>
 
@@ -16,10 +17,34 @@ void setupViewport(int width, int height);
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+auto fullscreen = false;  // to control fullscreen
 
-glm::mat4 ModelMatrix = glm::mat4(1.0f);
 glm::mat4 ViewMatrix = glm::mat4(1.0f);
 glm::mat4 ProjectionMatrix = glm::mat4(1.0f);
+
+void createTriangle2D(Mesh& triangleMesh)
+{
+    triangleMesh.SetVertices( {
+        glm::vec3(10.0f, 150.0f, -1.0f), // left  
+        glm::vec3(400.f, 150.0f, -1.0f), // right 
+        glm::vec3(200.0f, 20.0f, -1.0f)  // top   
+    } );
+}
+
+void createSquare2D(Mesh& squareMesh)
+{
+    squareMesh.SetVertices({
+          // first half triangle
+         glm::vec3(0.5f,  0.5f, -1.0f), // top right
+         glm::vec3(0.5f, -0.5f,  -1.0f), // bottom right 
+         glm::vec3(-0.5f,  0.5f,  -1.0f) , // top left  
+        
+        // second triangle
+        glm::vec3(0.5f, -0.5f,  -1.0f), // bottom right 
+        glm::vec3(-0.5f, -0.5f,  -1.0f), // bottom left
+        glm::vec3(-0.5f,  0.5f, -1.0f) // top left  
+    } );
+}
 
 int main()
 {
@@ -30,15 +55,17 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", fullscreen?glfwGetPrimaryMonitor():nullptr, nullptr);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
     }
+    
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
@@ -57,15 +84,14 @@ int main()
     Shader ourShader("resources/base.vs", "resources/base.fs");
  
     // set up vertex data (and buffer(s)) and configure vertex attributes
+    // We use different co-ordinates for traingle and mesh and maniuplate to disply
+    // in window by using transofrmations. 
     // ------------------------------------------------------------------
-    std::vector<glm::vec3> vertices = {
-         glm::vec3(10.0f, 300.0f, -1.0f), // left  
-         glm::vec3(800.f, 300.0f, -1.0f), // right 
-         glm::vec3(400.0f, 20.0f, -1.0f)  // top   
-    }; 
+    Mesh triangleMesh;  createTriangle2D(triangleMesh);
+    
 
-    Mesh traingleMesh;
-    traingleMesh.SetVertices(vertices);
+    Mesh squareMesh; createSquare2D(squareMesh);
+
 
     // uncomment this call to draw in wireframe polygons.
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -85,11 +111,24 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // draw our first triangle
+        // draw  triangle We just need project matrix as triangle coordinated are mapped into projection space.
         ourShader.use();
-        glm::mat4 mvp = ModelMatrix * ViewMatrix * ProjectionMatrix;
+        glm::mat4 mvp =  ProjectionMatrix;
         ourShader.setMat4("mvp",mvp);
-        traingleMesh.Draw();
+        triangleMesh.Draw();
+
+
+        // draw the square, we need to apply transofrmations to make square to visible/to bring in project space.
+        //rotate the model around the z-axis of model.
+        auto SquareModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(SCR_WIDTH / 2, SCR_HEIGHT / 2, 0));
+        SquareModelMatrix = glm::rotate(SquareModelMatrix, (float)glfwGetTime()*glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        SquareModelMatrix = glm::scale(SquareModelMatrix, glm::vec3(100, 100, 1));
+
+        mvp = glm::mat4(1.0);
+        mvp = ProjectionMatrix * SquareModelMatrix;
+        ourShader.setMat4("mvp", mvp);
+        squareMesh.Draw();
+
  
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -125,9 +164,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 void setupViewport(int width, int height)
 {
     glViewport(0, 0, width, height);
-    // Set orthographic projection to current framebuffer size
-    // NOTE: Configured top-left corner as (0, 0)
-    ProjectionMatrix = glm::mat4(1.0f);
-    ProjectionMatrix = glm::ortho(0.0, (double)width, (double)height, 0.0, 0.0, 1.0);
-
+    glm::vec2 viewportSize(width,height);
+    //2D- set focus position as middle of the screen.
+    Camera2D camera2d(viewportSize,viewportSize/2.f,1.2f);
+    ProjectionMatrix = camera2d.getProjectionMatrix();
 }

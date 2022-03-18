@@ -10,7 +10,7 @@ public:
 	GLenum drawMode = GL_TRIANGLES;
 	Mesh();
 	~Mesh();
-	void SetVertices(std::vector<glm::vec3>& verts);
+	void SetVertices(const std::vector<glm::vec3>& verts);
 	void Draw();
 
 private:
