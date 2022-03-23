@@ -11,9 +11,12 @@ public:
 	Mesh();
 	~Mesh();
 	void SetVertices(const std::vector<glm::vec3>& verts);
+	void SetColors(const std::vector<glm::vec4>& colors);
+	void SetColor(const glm::vec4& color);
 	void Draw();
 
 private:
 	std::vector<glm::vec3> m_vertices;
-	GLuint m_vao, m_vboVerts;
+    std::vector<glm::vec4> m_colors;
+	GLuint m_vao, m_vboVerts,m_vboColors;
 };

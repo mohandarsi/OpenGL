@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(helloTraingle)
+project(orthographicProjection)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -26,7 +26,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${glfw_SOURCE_DIR}/include)
 target_include_directories(${PROJECT_NAME} PRIVATE ${glm_SOURCE_DIR})
 
 target_link_libraries(${PROJECT_NAME} glfw glad)
-
 
 # Copy all of the resource files to the destination
 file(COPY ${project_resources} DESTINATION "resources/")

@@ -19,7 +19,6 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 auto fullscreen = false;  // to control fullscreen
 
-glm::mat4 ViewMatrix = glm::mat4(1.0f);
 glm::mat4 ProjectionMatrix = glm::mat4(1.0f);
 
 void createTriangle2D(Mesh& triangleMesh)
@@ -29,21 +28,25 @@ void createTriangle2D(Mesh& triangleMesh)
         glm::vec3(400.f, 150.0f, -1.0f), // right 
         glm::vec3(200.0f, 20.0f, -1.0f)  // top   
     } );
+
+   triangleMesh.SetColors({ glm::vec4(1.,0.,0.,1) ,glm::vec4(0.,1.,0.,1),glm::vec4(0.,0.,1.,1)}); //RGB
 }
 
 void createSquare2D(Mesh& squareMesh)
 {
     squareMesh.SetVertices({
           // first half triangle
-         glm::vec3(0.5f,  0.5f, -1.0f), // top right
-         glm::vec3(0.5f, -0.5f,  -1.0f), // bottom right 
-         glm::vec3(-0.5f,  0.5f,  -1.0f) , // top left  
+         glm::vec3(0.25f,  0.25f, -1.0f), // top right
+         glm::vec3(0.25f, -0.25f,  -1.0f), // bottom right 
+         glm::vec3(-0.25f,  0.25f,  -1.0f) , // top left  
         
         // second triangle
-        glm::vec3(0.5f, -0.5f,  -1.0f), // bottom right 
-        glm::vec3(-0.5f, -0.5f,  -1.0f), // bottom left
-        glm::vec3(-0.5f,  0.5f, -1.0f) // top left  
+        glm::vec3(0.25f, -0.25f,  -1.0f), // bottom right 
+        glm::vec3(-0.25f, -0.25f,  -1.0f), // bottom left
+        glm::vec3(-0.25f,  0.25f, -1.0f) // top left  
     } );
+
+     squareMesh.SetColor(glm::vec4(0.,1.,0.,1)); //GREEN
 }
 
 int main()
@@ -111,25 +114,43 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // draw  triangle We just need project matrix as triangle coordinated are mapped into projection space.
+        // for traingle we need to map vertices into NDC, for this we need projection matrix.
         ourShader.use();
         glm::mat4 mvp =  ProjectionMatrix;
         ourShader.setMat4("mvp",mvp);
         triangleMesh.Draw();
 
 
-        // draw the square, we need to apply transofrmations to make square to visible/to bring in project space.
-        //rotate the model around the z-axis of model.
-        auto SquareModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(SCR_WIDTH / 2, SCR_HEIGHT / 2, 0));
-        SquareModelMatrix = glm::rotate(SquareModelMatrix, (float)glfwGetTime()*glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        SquareModelMatrix = glm::scale(SquareModelMatrix, glm::vec3(100, 100, 1));
+        // for square we can do with out projection matrix as the coordinates are already in NDC space
+        // we can just do some animations to rotate the square. 
+        // We can also Skip this transformation which draws the static square.
+
+        auto angle = (float)glfwGetTime()*glm::radians(90.0f);
+
+        auto translate = glm::translate(glm::mat4(1.0f), glm::vec3(0.15, 0.15, 0));
+        auto rotation = glm::rotate(translate, angle, glm::vec3(0.0f, 0.0f, 1.0f));
+        auto ModelMatrix = glm::scale(rotation, glm::vec3(0.25, 0.25, 1));
 
         mvp = glm::mat4(1.0);
-        mvp = ProjectionMatrix * SquareModelMatrix;
+        mvp =  (ModelMatrix);
         ourShader.setMat4("mvp", mvp);
+        squareMesh.SetColor(glm::vec4(0.,1.,0.,1)); //GREEN
         squareMesh.Draw();
 
- 
+
+        // If we want to use projection matrix we need to make sure the vertices are mapped to projection corodinates otherwise we would see invisible square.
+        // translate it to near the centre of projection space, rotate for some animations and scale the vertices to make big enough.
+        translate = glm::translate(glm::mat4(1.0f), glm::vec3(SCR_WIDTH / 2, SCR_HEIGHT / 2, 0));
+        rotation = glm::rotate(translate, angle, glm::vec3(0.0f, 0.0f, 1.0f));
+        ModelMatrix = glm::scale(rotation, glm::vec3(100, 100, 1));
+
+        mvp = glm::mat4(1.0);
+        mvp =  ProjectionMatrix * (ModelMatrix);
+        ourShader.setMat4("mvp", mvp);
+        squareMesh.SetColor(glm::vec4(0.,0.,1.,1)); //BLUE
+        squareMesh.Draw();
+
+
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
