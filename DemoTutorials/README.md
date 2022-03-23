@@ -1,9 +1,12 @@
 # OpenGl C++ application
-Orthographic projection to configure top-left corner as orizon(0, 0).  
-and size as windows size. This makes developer to use coordinates in integers ove flosting point numbers.
 
-Check tutorial on [VAO,VBO](https://www.youtube.com/watch?v=hrZbyd4qPnk)  
- and [Projection](https://www.youtube.com/watch?v=YfaSzg6XG6A) another way to make NDC coordinates to visible by translating.  
+Examples how to use openGL API's.
+
+      - Basic Triangle.
+      - Orthographic projection - NDC space. (with viewing transformations)
+      - Orthographic projection - Non NDC space.
+      - Model Transformations.
+
 ## SetUp
 
 - Install [VS Code](https://code.visualstudio.com/)
@@ -24,8 +27,8 @@ From VS Code - Run following tasks from *Terminal* menu
 
 ## Execute
 
-Run follwoing command in command promt from build directory.  
+Run following command from build directory.  
 
 ```cmd
-   ./helloTriangle.exe
+   ./demoTutorials.exe
 ```
