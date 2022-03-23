@@ -57,7 +57,14 @@ void OrthographicProjectionNDC::onKeyPressed(const int& key, const int& scancode
   if(isIdentity)
   {
     m_mvp =  glm::mat4(1.);
-    m_mvp = glm::ortho(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f); // Set the viewing volume
+
+    auto cameraTransformation =  glm::mat4(1.);
+    cameraTransformation = glm::lookAt(glm::vec3(0,0,3.), glm::vec3(0,0,0), glm::vec3(0.25,0.5,0)); //To make little rotation on the model
+
+    auto orthographicProjection =  glm::mat4(1.);
+    orthographicProjection = glm::ortho(-1.f, 1.f, -1.f, 1.f, .1f, 4.f);  // here far plane is 4.f as we placed camera at 3.
+
+    m_mvp =  orthographicProjection * cameraTransformation; // Set the viewing volume
   }
   else
   {
