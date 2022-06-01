@@ -19,7 +19,7 @@
             "group": "build"
         },
         {
-            "label": "Generate WinBuild",
+            "label": "Generate configuration",
             "type": "shell",
             "command": "cmake",
             "problemMatcher": "$msCompile",

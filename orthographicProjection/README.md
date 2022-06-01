@@ -24,7 +24,7 @@ From VS Code - Run following tasks from *Terminal* menu
 
 ## Execute
 
-Run follwoing command in command promt from build directory.  
+Run following command in command promt from build directory.  
 
 ```cmd
    ./helloTriangle.exe

@@ -112,6 +112,7 @@ int main()
     }
 
     g_globalDemoObject->init();
+    std::cout << g_globalDemoObject->getInstructions();
    
     // uncomment this call to draw in wireframe polygons.
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h> // for GLFW_KEY_SPACE
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <sstream>      // std::stringstream
 
 OrthographicProjectionNDC::OrthographicProjectionNDC():
   DemoBase("resources/baseColor.vs", "resources/baseColor.fs"),
@@ -37,14 +38,19 @@ void OrthographicProjectionNDC::init()
          glm::vec4(1.0, 0.0, 0.0,1.),
          glm::vec4(1.0, 0.0, 0.0,1.)
         });
-      
-  std::cout<< "OpenGL is Left handed cooordinate system. if its right handed(Negative Z-Axis points into screen) , Blue traingle (Z= -0.1) \
-  should be front and Red traingle(Z= -0.5) should be back of Blue traingle. \
-  But this is not the case. It is because we are not applying any projection. The traingle itslef visible because the \
-  coordinates are already in NDC space."<< std::endl;
+}
 
-  std::cout<< "Press any key to toggle." << std::endl;
-
+std::string OrthographicProjectionNDC::getInstructions() const
+{
+  std::stringstream info;
+  
+  info  <<"Blue triangle in top and red triangle in back. Both are in NDC space.\n"
+        <<"By default OpenGL is a Left handed cooordinate system. if its right handed(Negative Z-Axis points into screen),\
+         Red traingle(Z= -0.5) should be back of Blue traingle(Z= -0.1). \n"
+        <<"Press any key to apply projection(switches to right hand) which switches the traingle \n"
+        <<"Press any key to toggle. \n";
+        
+  return info.str();
 }
 
 void OrthographicProjectionNDC::onKeyPressed(const int& key, const int& scancode, const int& action, const int& mods)

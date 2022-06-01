@@ -2,6 +2,7 @@
 
 #include <GLFW/glfw3.h> // for GLFW_KEY_SPACE
 #include <glm/glm.hpp>
+#include <sstream>      // std::stringstream
 
 OrthographicProjection::OrthographicProjection():
   DemoBase("resources/baseColor.vs", "resources/baseColor.fs"),
@@ -20,12 +21,18 @@ void OrthographicProjection::init()
     } );
 
    m_mesh.SetColors({ glm::vec4(1.,0.,0.,1) ,glm::vec4(0.,1.,0.,1),glm::vec4(0.,0.,1.,1)}); //RGB
-      
-  std::cout<< "No traingle is visible because coordinates are not in the NDC space  and we did not apply any projection matrix(or transformations). \
-  "<< std::endl;
+}
 
-  std::cout<< "Press any key to toggle (and to apply projection matrix)." << std::endl;
+std::string OrthographicProjection::getInstructions() const
+{
+  std::stringstream info;
 
+  info  <<"Basic color triangle mesh with non-NDC coordinates. \n"
+        <<"Info: No traingle is visible because coordinates are not in the NDC space \
+        and program is not applied any projection matrix(or transformations) \n"
+        <<"Press any key to toggle (and to apply projection matrix. \n";
+
+  return info.str();
 }
 
 void OrthographicProjection::onViewportSizeChanged(const int& width, const int& height)
@@ -43,8 +50,6 @@ void OrthographicProjection::onKeyPressed(const int& key, const int& scancode, c
   if(isIdentity)
   {
     const auto focusPosition = m_viewportSize/2.f;  //always middle of the screen.
-    // Set orthographic projection Configured top-left corner as (0, 0)
-    glm::mat4 orthographicMatrix = glm::mat4(1.0f);
     m_mvp = getProjectionMatrix(m_viewportSize,focusPosition,1);
   }
   else

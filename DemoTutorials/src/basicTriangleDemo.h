@@ -8,6 +8,7 @@ public:
     BasicTriangle();
     void init() override;
     void draw() override;
+    std::string getInstructions() const override;
 
 private:
 

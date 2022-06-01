@@ -28,7 +28,6 @@
                 "-DPLATFORM=Desktop",
                 "-DCMAKE_C_COMPILER='clang.exe'",
                 "-DCMAKE_CXX_COMPILER='clang++.exe'",
-                "-DCMAKE_MAKE_PROGRAM='ninja.exe'",
                 "-DCMAKE_BUILD_TYPE=Debug", "."],
                 
             "group": {

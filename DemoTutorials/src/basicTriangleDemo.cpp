@@ -6,6 +6,12 @@ BasicTriangle::BasicTriangle():
 {
 
 }
+
+std::string BasicTriangle::getInstructions() const
+{
+  return "Basic Traingle which uses NDC coordinates. \n";
+}
+
 void BasicTriangle::init()
 {
     //create Traingle

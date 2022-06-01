@@ -22,8 +22,13 @@ Examples how to use openGL API's.
 Open VSCode  
 From VS Code - Run following tasks from *Terminal* menu
 
-1) Generate WinBuild - To generate project files in Build folder.  
+1) Generate Configuration - To generate project files in Build folder.  
 2) Build - Produces executable in Build directory.
+
+## Dependencies
+
+GLM,GLAD and GLFW.  
+While configuring/building Cmake script automatically downloads the required packages from github.
 
 ## Execute
 

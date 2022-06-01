@@ -8,6 +8,7 @@ public:
     ModelTransformation();
     void init() override;
     void draw() override;
+    std::string getInstructions() const override;
     void onKeyPressed(const int& key, const int& scancode, const int& action, const int& mods) override;
     void onViewportSizeChanged(const int& width, const int& height) override;
 

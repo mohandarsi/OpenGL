@@ -11,6 +11,7 @@ public:
     virtual ~DemoBase() {};
     virtual void init() = 0;
     virtual void draw() = 0;
+    virtual std::string getInstructions() const = 0;
 
     virtual void onViewportSizeChanged(const int& width, const int& height){};
     virtual void onKeyPressed(const int& key, const int& scancode, const int& action, const int& mods){};

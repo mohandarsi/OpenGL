@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(helloTraingle)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_GENERATOR "Ninja")
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 set(FETCHCONTENT_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/external CACHE STRING "Base dir for thirdparty libs" )

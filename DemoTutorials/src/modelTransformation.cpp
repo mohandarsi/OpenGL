@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h> // for GLFW_KEY_SPACE
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <sstream>      // std::stringstream
 
 ModelTransformation::ModelTransformation():
   DemoBase("resources/baseColor.vs", "resources/baseColor.fs"),
@@ -14,7 +15,7 @@ ModelTransformation::ModelTransformation():
 void ModelTransformation::init()
 {
    m_mesh.SetVertices({
-          // first half triangle
+          // first triangle
          glm::vec3(0.25f,  0.25f, -1.0f), // top right
          glm::vec3(0.25f, -0.25f,  -1.0f), // bottom right 
          glm::vec3(-0.25f,  0.25f,  -1.0f) , // top left  
@@ -26,14 +27,28 @@ void ModelTransformation::init()
     } );
 
    m_mesh.SetColors({ 
-     glm::vec4(1.,0.,0.,1) ,glm::vec4(0.,1.,0.,1),glm::vec4(0.,0.,1.,1),glm::vec4(1.,0.,0.,1) ,glm::vec4(0.,1.,0.,1),glm::vec4(0.,0.,1.,1)
+
+     glm::vec4(1.,0.,0.,1),
+     glm::vec4(0.,1.,0.,1),
+     glm::vec4(0.,0.,1.,1),
+     
+     glm::vec4(1.,0.,0.,1),
+     glm::vec4(0.,1.,0.,1),
+     glm::vec4(0.,0.,1.,1)
+     
      }); //RGB
-      
-  std::cout<< "Press R to start rotate."<< std::endl;
-  std::cout<< "Press C to display Cloned mesh."<< std::endl;
+}
 
-  std::cout<< "Press same key's to toggle." << std::endl;
+std::string ModelTransformation::getInstructions() const
+{
+  std::stringstream info;
 
+  info  <<"Square mesh with gradiant colors which uses NDC coordinates. \n"
+        <<"Press R to apply transformations (rotate,scale etc..). \n" 
+        <<"Press C to create cloned square which shares the original mesh and non NDC transformations . \n"
+        <<"To toggle back use same key buttons (R or C). \n";
+
+  return info.str();
 }
 
 void ModelTransformation::onViewportSizeChanged(const int& width, const int& height)
