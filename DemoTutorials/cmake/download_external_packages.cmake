@@ -1,27 +1,34 @@
-
-include(ExternalProject)
-
-set(HAS_GLFW OFF)
-
-# Glad requires Python to configure itself and Python is an annoying dependency to have.
-# So as an exception to the rule we include the glad src/header files directly
-set(HAS_GLAD ON)
-
-
 include(FetchContent)
 
-MESSAGE("HAS_GLFW: " ${HAS_GLFW})
-if (NOT HAS_GLFW)
+find_package(glm QUIET)
+if(NOT glm_FOUND)
+    message(STATUS "downloading GLM...!")
+    FetchContent_Declare(
+        glm
+        GIT_REPOSITORY https://github.com/g-truc/glm.git 
+        GIT_TAG		   0.9.9.8
+        SOURCE_DIR          ${EXTERNAL_PACKAGES_DIR}/glm
+    )
+
+    FetchContent_GetProperties(glm)
+    if(NOT glm_POPULATED)
+        FetchContent_Populate(glm)
+        set(GLM_TEST_ENABLE OFF CACHE BOOL "" FORCE)
+        add_subdirectory(${glm_SOURCE_DIR} ${glm_BINARY_DIR})
+        set(GLM_INCLUDE_PATH "${glm_SOURCE_DIR}")
+    endif()
+endif()
+
+
+find_package(glfw QUIET)
+if(NOT glfw3_FOUND)
+    message(STATUS "downloading GLFW...!")
     FetchContent_Declare(
         glfw
         GIT_REPOSITORY https://github.com/glfw/glfw.git
         GIT_TAG 3.3.6
-        SOURCE_DIR          ${FETCHCONTENT_SOURCE_DIR}/glfw-src
-        SUBBUILD_DIR        ${FETCHCONTENT_SOURCE_DIR}/glfw-subbuild
-        UPDATE_COMMAND      ""
-        CONFIGURE_COMMAND   ""
-        BUILD_COMMAND       ""
-        INSTALL_COMMAND     ""
+        SOURCE_DIR          ${EXTERNAL_PACKAGES_DIR}/glfw
+        BINARY_DIR          ${EXTERNAL_PACKAGES_DIR}/glfw_build
     )
     FetchContent_GetProperties(glfw)
     if (NOT glfw_POPULATED)
@@ -31,22 +38,24 @@ if (NOT HAS_GLFW)
         set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
         set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
         add_subdirectory(${glfw_SOURCE_DIR} ${glfw_BINARY_DIR})
+        set(GLFW3_INCLUDE_PATH ${glfw_SOURCE_DIR}/include)
+        set(GLFW3_LIBRARIES glfw)
     endif()
-endif()
+endif() 
 
 
-MESSAGE("HAS_GLAD: " ${HAS_GLAD})
+# Glad requires Python to configure itself and Python is an annoying dependency to have.
+# So as an exception to the rule we include the glad src/header files directly
+set(HAS_GLAD ON)
+
 if (NOT HAS_GLAD)
+    message(STATUS "downloading GLAD...!")
     FetchContent_Declare(
         glad
         GIT_REPOSITORY https://github.com/Dav1dde/glad.git
         GIT_TAG v0.1.36
-        SOURCE_DIR          ${FETCHCONTENT_SOURCE_DIR}/glad-src
-        SUBBUILD_DIR        ${FETCHCONTENT_SOURCE_DIR}/glad-subbuild
-        UPDATE_COMMAND      ""
-        CONFIGURE_COMMAND   ""
-        BUILD_COMMAND       ""
-        INSTALL_COMMAND     ""
+        SOURCE_DIR          ${EXTERNAL_PACKAGES_DIR}/glad-src
+        SUBBUILD_DIR        ${EXTERNAL_PACKAGES_DIR}/glad-subbuild
     )
     FetchContent_GetProperties(glad)
     if (NOT glad_POPULATED)
@@ -58,21 +67,9 @@ if (NOT HAS_GLAD)
         add_subdirectory(${glad_SOURCE_DIR} ${glad_BINARY_DIR})
     endif()
 else()
-    add_subdirectory(${FETCHCONTENT_SOURCE_DIR}/glad)
+    message(STATUS "GLAD Found...!")
+    add_subdirectory(${EXTERNAL_PACKAGES_DIR}/glad)
 endif()
 
 
-FetchContent_Declare(
-	glm
-	GIT_REPOSITORY https://github.com/g-truc/glm.git 
-	GIT_TAG		   0.9.9.8
-    SOURCE_DIR          ${FETCHCONTENT_SOURCE_DIR}/glm-src
-    SUBBUILD_DIR        ${FETCHCONTENT_SOURCE_DIR}/glm-subbuild
-)
 
-FetchContent_GetProperties(glm)
-if(NOT glm_POPULATED)
-	FetchContent_Populate(glm)
-	set(GLM_TEST_ENABLE OFF CACHE BOOL "" FORCE)
-	add_subdirectory(${glm_SOURCE_DIR} ${glm_BINARY_DIR})
-endif()

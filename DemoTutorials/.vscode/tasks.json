@@ -42,6 +42,13 @@
             "type": "shell",
             "command": "ninja -C build",
             "problemMatcher": "$msCompile",
+        },
+        {
+            "label": "Pacakge",
+            "type": "shell",
+            "command": "cpack  --config build/CPackConfig.cmake",
+            "problemMatcher": "$msCompile",
+            "dependsOn":["Build"],
         }
     ]
 }

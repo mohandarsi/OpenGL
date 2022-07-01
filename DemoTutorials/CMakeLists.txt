@@ -1,11 +1,17 @@
 cmake_minimum_required(VERSION 3.0)
-project(DemoTutorials)
+
+set(PACKAGE_VERSION 0.0.0 CACHE STRING "")
+
+project(DemoTutorials  VERSION ${PACKAGE_VERSION})
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/Install)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
-set(FETCHCONTENT_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/external CACHE STRING "Base dir for thirdparty libs" )
-MESSAGE("FETCHCONTENT_SOURCE_DIR: " ${FETCHCONTENT_SOURCE_DIR})
+set(EXTERNAL_PACKAGES_DIR ${CMAKE_CURRENT_LIST_DIR}/external CACHE STRING "Base dir for third-party libs")
+MESSAGE("EXTERNAL_PACKAGES_DIR: " ${EXTERNAL_PACKAGES_DIR})
+
+set(CMAKE_PREFIX_PATH ${EXTERNAL_PACKAGES_DIR} CACHE INTERNAL "")
 
 include(${CMAKE_MODULE_PATH}/download_external_packages.cmake)
 
@@ -16,18 +22,24 @@ file(GLOB_RECURSE SRC_LIST ${CMAKE_SOURCE_DIR}/src/*.cpp
 
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 
-set(project_resources)
+target_include_directories(${PROJECT_NAME} 
+          PRIVATE
+            ${GLFW3_INCLUDE_PATH}
+            ${GLM_INCLUDE_PATH}
+          )
 
-# Any any resources
-file(GLOB resources ${CMAKE_SOURCE_DIR}/src/resources/*)
-list(APPEND project_resources ${resources})
+target_link_libraries(${PROJECT_NAME} 
+                PRIVATE 
+                  ${GLFW3_LIBRARIES}
+                  glad
+              )
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${glfw_SOURCE_DIR}/include)
-target_include_directories(${PROJECT_NAME} PRIVATE ${glm_SOURCE_DIR})
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/resources)
 
-target_link_libraries(${PROJECT_NAME} glfw glad)
+# Instal
+install(TARGETS ${PROJECT_NAME}
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
 
-# Copy all of the resource files to the destination
-file(COPY ${project_resources} DESTINATION "resources/")
-
-
+include(cmake/Packaging.cmake)

@@ -25,6 +25,14 @@ From VS Code - Run following tasks from *Terminal* menu
 1) Generate Configuration - To generate project files in Build folder.  
 2) Build - Produces executable in Build directory.
 
+To generate nuget package
+
+```cmd
+cd build
+cmake --install .
+cpack
+```
+
 ## Dependencies
 
 GLM,GLAD and GLFW.  
